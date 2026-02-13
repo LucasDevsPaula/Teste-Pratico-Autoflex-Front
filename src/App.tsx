@@ -7,8 +7,6 @@ import { EditProduct } from "./pages/products/edit";
 import { RawMaterials } from "./pages/rawMaterials";
 import { NewRawMaterials } from "./pages/rawMaterials/new";
 import { EditRawMaterials } from "./pages/rawMaterials/edit";
-import { AddRawMaterials } from "./pages/home/new";
-import { EditProductsRawMaterials } from "./pages/home/edit";
 
 const router = createBrowserRouter([
   {
@@ -41,16 +39,6 @@ const router = createBrowserRouter([
       {
         path: "/rawMaterials/edit/:id",
         element: <EditRawMaterials />,
-      },
-      {
-        //Adicionar matéria-prima no produto
-        path: "/products/add",
-        element: <AddRawMaterials />,
-      },
-      {
-        //Editar matéria-prima do produto
-        path: "/products/edit/rawMaterials/:id",
-        element: <EditProductsRawMaterials />,
       },
     ],
   },

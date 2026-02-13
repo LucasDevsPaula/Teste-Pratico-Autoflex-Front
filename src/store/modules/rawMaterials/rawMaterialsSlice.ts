@@ -14,6 +14,18 @@ interface RawMaterialsState {
   error: string | null;
 }
 
+interface CreateRawMaterials {
+  code: string;
+  name: string;
+  stockyQuantity: number;
+}
+
+interface UpdateRawMaterialPayload {
+  id: string;
+  name: string;
+  stockyQuantity: number;
+}
+
 const initialState: RawMaterialsState = {
   items: [],
   loading: false,
@@ -24,8 +36,30 @@ export const fetchRawMaterials = createAsyncThunk(
   "rawMaterials/fetchAll",
   async () => {
     const res = await axios.get("http://localhost:3333/rawMaterials");
+    return res.data.rawMaterials || res.data;
+  },
+);
+
+export const addRawMaterial = createAsyncThunk(
+  "rawMaterials/add",
+  async (newRawMaterial: CreateRawMaterials) => {
+    const res = await axios.post(
+      "http://localhost:3333/rawMaterials",
+      newRawMaterial,
+    );
     return res.data;
   },
+);
+
+export const updateRawMaterial = createAsyncThunk(
+  "rawMaterials/update",
+  async (data: UpdateRawMaterialPayload) => {
+    await axios.put(`http://localhost:3333/rawMaterials/${data.id}`, {
+      name: data.name,
+      stockyQuantity: data.stockyQuantity,
+    });
+    return;
+  }
 );
 
 const rawMaterialsSlice = createSlice({
@@ -44,6 +78,32 @@ const rawMaterialsSlice = createSlice({
       .addCase(fetchRawMaterials.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || "Erro ao carregar matérias-prima";
+      });
+
+    builder
+      .addCase(addRawMaterial.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(addRawMaterial.fulfilled, (state) => {
+        state.loading = false;
+      })
+      .addCase(addRawMaterial.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || "Erro ao cadastrar produto";
+      });
+
+      builder
+      .addCase(updateRawMaterial.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateRawMaterial.fulfilled, (state) => {
+        state.loading = false;
+      })
+      .addCase(updateRawMaterial.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || "Erro ao atualizar insumo";
       });
   },
 });
